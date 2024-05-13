@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Ecosystem</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js"></script>
+</head>
+<body>
+    <header>
+        <img src="/static/images/logo.png" alt="AI Agent Ecosystem Logo">
+        <h1>AI Agent Ecosystem</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Agents</h2>
+            <button id="start-agents-button" onclick="start_agents()">Start All Agents</button>
+            <button id="stop-agents-button" onclick="stop_agents()">Stop All Agents</button>
+            <div id="agent-list"></div>
+        </section>
+        <section>
+            <h2>Angels</h2>
+            <div id="angel-list"></div>
+        </section>
+        <section>
+            <h2>Demons</h2>
+            <div id="demon-list"></div>
+        </section>
+        <section>
+            <h2>Legions</h2>
+            <div id="legion-list"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 AI Agent Ecosystem. All rights reserved.</p>
+    </footer>
+    <script>
+        // Load initial data on page load
+        window.onload = function() {
+            load_agent_data();
+            load_angel_data();
+            load_demon_data();
+            load_legion_data();
+        };
+    </script>
+</body>
+</html>
