@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URI=${DATABASE_URI}
+    depends_on:
+      - agent_manager
+
+  agent_manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    environment:
+      - AGENT_COUNT=144
+      - DEMON_COUNT=72
+      - ANGEL_COUNT=72
+      - LEGION_COUNT_PER_AGENT=${LEGION_COUNT_PER_AGENT}
+    command: python -m agents.manager
+
+networks:
+  default:
+    external:
+      name: agents_network
+
+volumes:
+  agent_data: {}

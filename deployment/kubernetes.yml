@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-agent-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ai-agent
+  template:
+    metadata:
+      labels:
+        app: ai-agent
+    spec:
+      containers:
+      - name: ai-agent
+        image: ai-agent:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: AGENT_COUNT
+          value: "144"
+        - name: DEMON_COUNT
+          value: "72"
+        - name: ANGEL_COUNT
+          value: "72"
+        - name: DATABASE_URI
+          valueFrom:
+            configMapKeyRef:
+              name: ai-agent-config
+              key: database_uri
+        - name: LOGGING_CONFIG
+          valueFrom:
+            configMapKeyRef:
+              name: ai-agent-config
+              key: logging_config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-agent-service
+spec:
+  selector:
+    app: ai-agent
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-agent-config
+data:
+  database_uri: "mongodb://ai-agent-db:27017"
+  logging_config: "/etc/ai-agent/logging.conf"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ai-agent-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ai-agent-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"

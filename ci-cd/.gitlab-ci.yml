@@ -1,0 +1,43 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  AGENT_COUNT: 144
+  DEMON_COUNT: 72
+  ANGEL_COUNT: 72
+
+before_script:
+  - echo "Starting CI/CD Pipeline for the AI Agent Framework"
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - python -m unittest discover tests
+
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    - python setup.py install
+
+deploy_staging:
+  stage: deploy
+  script:
+    - echo "Deploying to staging environment..."
+    - bash scripts/deploy.sh
+  only:
+    - develop
+
+deploy_production:
+  stage: deploy
+  script:
+    - echo "Deploying to production environment..."
+    - bash scripts/deploy.sh
+  only:
+    - master
+
+after_script:
+  - echo "CI/CD Pipeline finished"
